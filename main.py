@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.keys import Keys
 import pyautogui
 import os
 import time
@@ -23,6 +24,7 @@ finally:
             EC.presence_of_element_located((By.ID, "subtab-AdminImport"))
         )
     finally:
+        time.sleep(1)
         driver.find_element(By.ID, "subtab-AdminImport").click()
         try:
             main = WebDriverWait(driver, 10).until(
@@ -30,13 +32,19 @@ finally:
             )
         finally:
             Select(driver.find_element(By.ID, "entity")).select_by_visible_text("Produkty")
-            upload_element = driver.find_element(By.ID, "file-add-button")
-            upload_element.click()
+            driver.find_element(By.ID, "file").send_keys(os.getcwd() + '\lamps2.csv')
+            driver.find_element(By.ID, "truncate_1").click()
+            #upload_element = driver.find_element(By.ID, "file-add-button")
+            #upload_element.click()
             time.sleep(1)
-            pyautogui.write(os.getcwd() + '\lamps2.csv', interval=0.01)
-            pyautogui.press('return')
-            time.sleep(3)
-            driver.find_element(By.ID, "submitImportFile").click()
+            #pyautogui.write(os.getcwd() + '\lamps2.csv', interval=0.01)
+            #pyautogui.press('return')
+            #time.sleep(3)
+            driver.find_element(By.NAME, "submitImportFile").click()
+            time.sleep(0.3)
+            alert_obj = driver.switch_to.alert
+            alert_obj.accept()
+            time.sleep(0.3)
             try:
                 main = WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.ID, "valueImportMatchs"))
