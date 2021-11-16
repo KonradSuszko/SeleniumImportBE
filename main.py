@@ -9,6 +9,7 @@ import os
 import time
 
 driver = webdriver.Chrome(os.getcwd() + "\chromedriver.exe")
+driver.maximize_window()
 driver.get("http:localhost:80/admin0009e8qap")
 driver.find_element(By.ID, "email").send_keys("admin@jasniej.pl")
 driver.find_element(By.ID, "passwd").send_keys("adminadmin")
@@ -19,6 +20,7 @@ try:
     )
 finally:
     driver.find_element(By.ID, "subtab-AdminAdvancedParameters").click()
+    #driver.find_element(By.ID, "subtab-AdminParentOrders").click()
     try:
         main = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "subtab-AdminImport"))
