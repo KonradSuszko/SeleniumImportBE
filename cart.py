@@ -11,14 +11,18 @@ import uuid
 
 driver = webdriver.Chrome(os.getcwd() + "\chromedriver.exe")
 
-qty = ['1',    '1',    '2',     '1',    '2',    '3',    '1',    '2',     '4',    '6']
+ids = ['8774', '8791', '30279', '2686', '8744', '8792', '8731', '26275', '2547', '2546']
+qty = ['1',    '1',    '2',     '1',    '2',    '1',    '1',    '2',     '4',    '6']
 
-driver.get("https://localhost:443")
+driver.get("https://localhost:18062")
 driver.find_element(By.CLASS_NAME, "dropdown-item").click()
 driver.find_element(By.LINK_TEXT , "Lampy zewnętrzne").click()
 for i in range(7):
     items = driver.find_elements(By.XPATH, "//article[@class='product-miniature js-product-miniature']")
-    items[i].click()
+    if i < 5:
+        items[i].click()
+    else:
+        items[i+1].click()
     try:
         main = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "qty"))
@@ -36,19 +40,15 @@ driver.find_element(By.LINK_TEXT, "Oświetlenie").click()
 driver.find_element(By.LINK_TEXT, "Gniazda i wyłączniki").click()
 for i in range(3):
     items = driver.find_elements(By.XPATH, "//article[@class='product-miniature js-product-miniature']")
+    #driver.find_element(By.XPATH, "//article[@data-id-product=" + ids[i] + ']').click()
     items[i].click()
-    try:
-        main = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "qty"))
-        )
-    finally:
-        quantity = driver.find_element(By.NAME , "qty")
-        quantity.send_keys(Keys.CONTROL + "a")
-        quantity.send_keys(qty[i])
-        driver.find_element(By.XPATH, "//button[@data-button-action='add-to-cart']").click()
-        time.sleep(5)
-        driver.find_element(By.XPATH, "//button[@class='btn btn-secondary']").click()
-        driver.find_element(By.LINK_TEXT, "Gniazda i wyłączniki").click()
+    quantity = driver.find_element(By.NAME , "qty")
+    quantity.send_keys(Keys.CONTROL + "a")
+    quantity.send_keys(qty[i])
+    driver.find_element(By.XPATH, "//button[@data-button-action='add-to-cart']").click()
+    time.sleep(3)
+    driver.find_element(By.XPATH, "//button[@class='btn btn-secondary']").click()
+    driver.find_element(By.LINK_TEXT, "Gniazda i wyłączniki").click()
 driver.find_element(By.XPATH, "//div[@id='_desktop_cart']//a[@rel='nofollow']").click()
 cart_elements = driver.find_elements(By.CLASS_NAME, 'cart-item')
 cart_elements[3].find_element(By.CLASS_NAME, 'remove-from-cart').click()
@@ -77,6 +77,7 @@ finally:
         )
     finally:
         driver.find_element(By.ID, "delivery_option_4").click()
+        #driver.find_element(By.ID, "conditions_to_approve[terms-and-conditions]").click()
         time.sleep(0.5)
         driver.find_element(By.NAME, "confirmDeliveryOption").click()
         try:
@@ -98,3 +99,38 @@ finally:
                 driver.find_element(By.ID, "history-link").click()
                 time.sleep(3)
                 driver.find_element(By.XPATH, "//a[@data-link-action='view-order-details']").click()
+# driver.find_element(By.ID, "passwd").send_keys("adminadmin")
+# driver.find_element(By.NAME, "submitLogin").submit()
+# try:
+#     main = WebDriverWait(driver, 10).until(
+#         EC.presence_of_element_located((By.ID, "subtab-AdminAdvancedParameters"))
+#     )
+# finally:
+#     driver.find_element(By.ID, "subtab-AdminAdvancedParameters").click()
+#     try:
+#         main = WebDriverWait(driver, 10).until(
+#             EC.presence_of_element_located((By.ID, "subtab-AdminImport"))
+#         )
+#     finally:
+#         driver.find_element(By.ID, "subtab-AdminImport").click()
+#         try:
+#             main = WebDriverWait(driver, 10).until(
+#                 EC.presence_of_element_located((By.ID, "entity"))
+#             )
+#         finally:
+#             Select(driver.find_element(By.ID, "entity")).select_by_visible_text("Produkty")
+#             upload_element = driver.find_element(By.ID, "file-add-button")
+#             upload_element.click()
+#             time.sleep(1)
+#             pyautogui.write(os.getcwd() + '\lamps2.csv', interval=0.01)
+#             pyautogui.press('return')
+#             time.sleep(3)
+#             driver.find_element(By.ID, "submitImportFile").click()
+#             try:
+#                 main = WebDriverWait(driver, 10).until(
+#                     EC.presence_of_element_located((By.ID, "valueImportMatchs"))
+#                 )
+#             finally:
+#                 Select(driver.find_element(By.ID, "valueImportMatchs")).select_by_visible_text("import_git")
+#                 driver.find_element(By.ID, "loadImportMatchs").click()
+#                 driver.find_element(By.ID, "import").click()
